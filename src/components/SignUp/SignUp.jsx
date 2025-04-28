@@ -8,14 +8,23 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+
   const handleSignUp = (e) => {
     e.preventDefault();
     const target = e.target;
     const email = target.email.value;
     const password = target.password.value;
+    const terms=target.terms.checked;
+    console.log(email, password, terms)
 
     setSuccess(false);
     setErrorMessage("");
+
+
+    if(!terms){
+        setErrorMessage('please accept the terms');
+        return;
+    }
 
     // password valided
 
@@ -72,7 +81,7 @@ const SignUp = () => {
               <div className="relative">
                 <input
                   name="password"
-                  type={showPassword ? 'text':'password'}
+                  type={showPassword ? "text" : "password"}
                   className="input"
                   placeholder="Password"
                 />
@@ -80,13 +89,17 @@ const SignUp = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="btn btn-xs absolute top-2 right-3"
                 >
-                 {
-                    showPassword ? <FaEyeSlash></FaEyeSlash>: <FaEye></FaEye>
-                 }
+                  {showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>}
                 </button>
               </div>
               <div>
                 <a className="link link-hover">Forgot password?</a>
+              </div>
+<div className="py-3 px-2">
+                <label className="label">
+                  <input type="checkbox" name="terms" className="checkbox" />
+                  Accept term and conditon
+                </label>
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
             </form>
