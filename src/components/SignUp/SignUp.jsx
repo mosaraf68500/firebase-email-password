@@ -1,12 +1,12 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignUp = () => {
-
-    const[success,setSuccess]=useState(false);
+  const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
- 
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -17,41 +17,32 @@ const SignUp = () => {
     setSuccess(false);
     setErrorMessage("");
 
-
     // password valided
 
-    const RegExpassword=/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6}$/;
+    const RegExpassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6}$/;
 
-    const RegDigit=/(?=.*\d)/;
-    const RegLowerCase=/(?=.*[a-z])/;
-    const RegUpperCase=/(?=.*[A-Z])/;
+    const RegDigit = /(?=.*\d)/;
+    const RegLowerCase = /(?=.*[a-z])/;
+    const RegUpperCase = /(?=.*[A-Z])/;
     const RegLength = /^.{6}$/;
 
     // if(RegExpassword.test(password)==false){ setErrorMessage('please confirm your password one upper case one lower case one digit and length 6'); return; }
 
-
     // password validation one by one
 
-    if(RegDigit.test(password)== false){
-        setErrorMessage('confirmed at least one digit');
-        return;
+    if (RegDigit.test(password) == false) {
+      setErrorMessage("confirmed at least one digit");
+      return;
+    } else if (RegLowerCase.test(password) == false) {
+      setErrorMessage("confirmed at least one lower case");
+      return;
+    } else if (RegUpperCase.test(password) == false) {
+      setErrorMessage("confirmed at least one upper case");
+      return;
+    } else if (RegLength.test(password) == false) {
+      setErrorMessage("Password must be exactly 6 characters long");
+      return;
     }
-
-    else if(RegLowerCase.test(password)==false){
-        setErrorMessage('confirmed at least one lower case');
-        return;
-    }
-
-    else if(RegUpperCase.test(password)==false){
-        setErrorMessage('confirmed at least one upper case');
-        return;
-    }
-
-
-    else if(RegLength.test(password)==false){
-        setErrorMessage('Password must be exactly 6 characters long');
-        return; }
-
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
@@ -71,9 +62,29 @@ const SignUp = () => {
           <div className="card-body">
             <form onSubmit={handleSignUp} className="fieldset">
               <label className="label">Email</label>
-              <input name="email" type="email" className="input" placeholder="Email" />
+              <input
+                name="email"
+                type="email"
+                className="input"
+                placeholder="Email"
+              />
               <label className="label">Password</label>
-              <input name="password" type="password" className="input" placeholder="Password" />
+              <div className="relative">
+                <input
+                  name="password"
+                  type={showPassword ? 'text':'password'}
+                  className="input"
+                  placeholder="Password"
+                />
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="btn btn-xs absolute top-2 right-3"
+                >
+                 {
+                    showPassword ? <FaEyeSlash></FaEyeSlash>: <FaEye></FaEye>
+                 }
+                </button>
+              </div>
               <div>
                 <a className="link link-hover">Forgot password?</a>
               </div>
@@ -81,13 +92,11 @@ const SignUp = () => {
             </form>
 
             {/* Also fix: P --> p (lowercase!) */}
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>
-            
-            }
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-            {
-                success && <p className="text-green-500">user created successfully</p>
-            }
+            {success && (
+              <p className="text-green-500">user created successfully</p>
+            )}
           </div>
         </div>
       </div>
