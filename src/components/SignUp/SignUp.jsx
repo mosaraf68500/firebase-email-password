@@ -21,10 +21,36 @@ const SignUp = () => {
     // password valided
 
     const RegExpassword=/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6}$/;
-    if(RegExpassword.test(password)==false){ setErrorMessage('please confirm your password one upper case one lower case one digit and length 6'); return; }
+
+    const RegDigit=/(?=.*\d)/;
+    const RegLowerCase=/(?=.*[a-z])/;
+    const RegUpperCase=/(?=.*[A-Z])/;
+    const RegLength = /^.{6}$/;
+
+    // if(RegExpassword.test(password)==false){ setErrorMessage('please confirm your password one upper case one lower case one digit and length 6'); return; }
 
 
     // password validation one by one
+
+    if(RegDigit.test(password)== false){
+        setErrorMessage('confirmed at least one digit');
+        return;
+    }
+
+    else if(RegLowerCase.test(password)==false){
+        setErrorMessage('confirmed at least one lower case');
+        return;
+    }
+
+    else if(RegUpperCase.test(password)==false){
+        setErrorMessage('confirmed at least one upper case');
+        return;
+    }
+
+
+    else if(RegLength.test(password)==false){
+        setErrorMessage('Password must be exactly 6 characters long');
+        return; }
 
 
     createUserWithEmailAndPassword(auth, email, password)
