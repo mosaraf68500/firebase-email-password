@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router";
 
 const SignUp = () => {
   const [success, setSuccess] = useState(false);
@@ -103,6 +104,8 @@ const SignUp = () => {
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
             </form>
+
+            <p>Already have an account? <Link className="text-blue-700" to='/login'> Login</Link> </p>
 
             {/* Also fix: P --> p (lowercase!) */}
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
