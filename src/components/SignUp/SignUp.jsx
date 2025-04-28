@@ -3,6 +3,8 @@ import { auth } from "../../firebase/firebase.config";
 import { useState } from "react";
 
 const SignUp = () => {
+
+    const[success,setSuccess]=useState(false);
   const [errorMessage, setErrorMessage] = useState("");
  
 
@@ -11,11 +13,24 @@ const SignUp = () => {
     const target = e.target;
     const email = target.email.value;
     const password = target.password.value;
-    setErrorMessage("")
+
+    setSuccess(false);
+    setErrorMessage("");
+
+
+    // password valided
+
+    const RegExpassword=/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6}$/;
+    if(RegExpassword.test(password)==false){ setErrorMessage('please confirm your password one upper case one lower case one digit and length 6'); return; }
+
+
+    // password validation one by one
+
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result);
+        setSuccess(true);
       })
       .catch((error) => {
         console.log(error);
@@ -40,8 +55,12 @@ const SignUp = () => {
             </form>
 
             {/* Also fix: P --> p (lowercase!) */}
-            {errorMessage? <p className="text-red-500">{errorMessage}</p>:
-            <p>{alert("success")}</p>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>
+            
+            }
+
+            {
+                success && <p className="text-green-500">user created successfully</p>
             }
           </div>
         </div>
