@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -57,7 +57,12 @@ const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result);
-        setSuccess(true);
+        sendEmailVerification(auth.currentUser)
+        .then(()=>{
+            console.log(result.user);
+            setSuccess(true);
+        })
+        
       })
       .catch((error) => {
         console.log(error);
@@ -66,9 +71,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="card bg-base-100 w-full max-w-lg shrink-0 shadow-2xl">
+    
+        <div className="card bg-base-100 w-full mx-auto max-w-lg shrink-0 shadow-2xl">
           <div className="card-body">
             <form onSubmit={handleSignUp} className="fieldset">
               <label className="label">Email</label>
@@ -88,7 +92,7 @@ const SignUp = () => {
                 />
                 <button
                   onClick={() => setShowPassword(!showPassword)}
-                  className="btn btn-xs absolute top-2 right-3"
+                  className="btn btn-xs absolute top-2 right-38"
                 >
                   {showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>}
                 </button>
@@ -115,8 +119,7 @@ const SignUp = () => {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      
   );
 };
 

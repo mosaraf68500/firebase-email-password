@@ -1,5 +1,5 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useState } from 'react';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { auth } from '../../firebase/firebase.config';
 
@@ -9,6 +9,7 @@ const Login = () => {
     const [errorMessage,setErrorMessage]=useState("")
 
     const [success,setSuccess]=useState(false);
+    const emailRef=useRef();
 
     const handleLogin=e=>{
         e.preventDefault();
@@ -22,12 +23,34 @@ const Login = () => {
         signInWithEmailAndPassword(auth,email,password)
         .then(result =>{
             console.log(result);
-            setSuccess(true);
+            if(!result.user.emailVerified){
+                alert('please emailVerified');
+                
+            }
+            else{
+                setSuccess(true);
+
+            }
         })
 
         .catch(error =>{
             console.log(error)
             setErrorMessage("please enter valided password");
+        })
+
+    }
+
+    const handleForgetpassword=()=>{
+        console.log(emailRef.current.value);
+        const email=emailRef.current.value;
+        setErrorMessage("");
+        sendPasswordResetEmail(auth,email)
+        .then(result =>{
+            alert('please check your email and reset password');
+            console.log(result)
+        })
+        .catch(error =>{
+            setErrorMessage(error.message)
         })
 
     }
@@ -38,10 +61,10 @@ const Login = () => {
       <h1 className="text-5xl font-bold">Login now!</h1>
         <form onSubmit={handleLogin} className="fieldset">
           <label className="label">Email</label>
-          <input name='email' type="email" className="input" placeholder="Email" />
+          <input name='email' ref={emailRef} type="email" className="input" placeholder="Email" />
           <label className="label">Password</label>
           <input name='password' type="password" className="input" placeholder="Password" />
-          <div><a className="link link-hover">Forgot password?</a></div>
+          <div onClick={handleForgetpassword}><a className="link link-hover">Forgot password?</a></div>
           <button className="btn btn-neutral mt-4">Login</button>
         </form>
 
